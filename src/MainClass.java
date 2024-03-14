@@ -17,14 +17,6 @@ public class MainClass {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		new MainClass();
-		// test();
-	}
-	
-	public static void test() {
-		String str = "W    ayTo Learn        X";
-        System.out.println("Mot avec des espaces: " + str);
-        str = str.replaceAll("\\s", "");
-        System.out.println("Mot sans des espaces: " + str);
 	}
 	
 	public MainClass() {
