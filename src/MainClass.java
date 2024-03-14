@@ -100,7 +100,7 @@ public class MainClass {
 				(!partLeft.equals("") && !operation.equals("") && partRight.equals("")) || 
 				    (partLeft.equals("") && !operation.equals("") && partRight.equals("")) || 
 				        (partLeft.equals("") && !operation.equals("") && !partRight.equals("")))
-			throw new ManageException("т.к. Цепочка не подходит для операции");
+			throw new ManageException("т.к. строка не является математической операцией");
 		else {
 			if((romanNumber(partLeft) == true) && (romanNumber(partRight) == true)) {
 				res = selectRomanOp(partLeft, partRight, operation);
@@ -405,7 +405,6 @@ public class MainClass {
 				}
 			}while((i < strValue.length()) && (end == false));
 		} else   val = getArrabic(strValue);
-		getMessage("1- val " + val);
 		return val;
 	}
 	
