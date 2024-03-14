@@ -17,6 +17,14 @@ public class MainClass {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		new MainClass();
+		// test();
+	}
+	
+	public static void test() {
+		String str = "W    ayTo Learn        X";
+        System.out.println("Mot avec des espaces: " + str);
+        str = str.replaceAll("\\s", "");
+        System.out.println("Mot sans des espaces: " + str);
 	}
 	
 	public MainClass() {
@@ -49,7 +57,7 @@ public class MainClass {
 		try {
 			str = read.readLine();
 			if (str.equals("") == true)   throw new ManageException("т.к. Отправленная строка пуста...");
-			else   result = str;
+			else   result = str.replaceAll("\\s", "");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			throw new ManageException("т.к. Ошибка чтения с клавиатуры...");
