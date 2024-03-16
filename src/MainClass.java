@@ -103,7 +103,9 @@ public class MainClass {
 			throw new ManageException("т.к. строка не является математической операцией");
 		else {
 			if((romanNumber(partLeft) == true) && (romanNumber(partRight) == true)) {
-				res = selectRomanOp(partLeft, partRight, operation);
+				if((romanIsCalculable(partLeft) == false) || (romanIsCalculable(partRight) == false))
+					throw new ManageException("т.к. Ваши римские цифры не должны быть > X");
+				else    res = selectRomanOp(partLeft, partRight, operation);
 			} else {
 				if((((romanNumber(partLeft) == true) && (arabicNumber(partRight) == true)) || 
 					((arabicNumber(partLeft) == true) && (romanNumber(partRight) == true))) ||
@@ -112,7 +114,9 @@ public class MainClass {
 					throw new ManageException("т.к. Используются одновременно разные системы счисления");
 				} else {
 					if((arabicNumber(partLeft) == true) && (arabicNumber(partRight) == true)) {
-						res += selectArabicOp(Integer.parseInt(partLeft), Integer.parseInt(partRight), operation);
+						if((Integer.parseInt(partLeft) > 10) || (Integer.parseInt(partRight) > 10))
+							throw new ManageException("т.к. Ваши числа не должны быть > 10");
+						else    res += selectArabicOp(Integer.parseInt(partLeft), Integer.parseInt(partRight), operation);
 					}
 				}
 			}
@@ -244,7 +248,7 @@ public class MainClass {
 	 * @return
 	 */
 	public String romanAdd(String strLeft, String strRight) {
-		int res = transformArrabic(strLeft) + transformArrabic(strRight);
+		int res = getArrabic(strLeft) + getArrabic(strRight);
 		return correspondRoman(res);
 	}
 	
@@ -256,7 +260,7 @@ public class MainClass {
 	 * @throws ManageException
 	 */
 	public String romanSub(String strLeft, String strRight) throws ManageException {
-		int res = transformArrabic(strLeft) - transformArrabic(strRight);
+		int res = getArrabic(strLeft) - getArrabic(strRight);
 		if(res < 0)	  throw new ManageException("т.к. в римской системе нет отрицательных чисел");
 		else   return correspondRoman(res);
 	}
@@ -268,7 +272,7 @@ public class MainClass {
 	 * @return
 	 */
 	public String romanMult(String strLeft, String strRight) {
-		int res = transformArrabic(strLeft) * transformArrabic(strRight);
+		int res = getArrabic(strLeft) * getArrabic(strRight);
 		return correspondRoman(res);
 	}
 	
@@ -279,7 +283,7 @@ public class MainClass {
 	 * @return
 	 */
 	public String romanDiv(String strLeft, String strRight) {
-		int res = transformArrabic(strLeft) / transformArrabic(strRight);
+		int res = getArrabic(strLeft) / getArrabic(strRight);
 		return correspondRoman(res);
 	}
 
@@ -333,9 +337,8 @@ public class MainClass {
 		if(value < 10)	 strRoman = getRoman(value);
 		else {
 			String str = "" + value;
-			if(str.substring(1, 2).equals("0")) {
-				strRoman += getRoman(value);
-			} else {
+			if(str.substring(1, 2).equals("0"))	  strRoman += getRoman(value);
+			else {
 				do {
 					int tail = str.length();
 					int first = Integer.parseInt(str.substring(0, 1));
@@ -344,10 +347,6 @@ public class MainClass {
 					} else {
 						if(tail == 3) {
 							strRoman += getRoman(first * 100);
-						} else {
-							if(tail == 4) {
-								strRoman += getRoman(first * 1000);
-							}
 						}
 					}
 					str = str.substring(1, str.length());
@@ -358,54 +357,15 @@ public class MainClass {
 		return strRoman;
 	}
 	
-	/**
-	 * 
-	 * @param strValue
-	 * @return
-	 */
-	public int transformArrabic(String strValue) {
-		int val = 0;
-		if((strValue.length() > 1) && (getArrabic(strValue.substring(0, 1)) >= 10)) {
-			int i = 0;
-			boolean end = false;
-			do {
-				int ent = getArrabic(strValue.substring(i, i + 1));
-				if(ent == 10) {
-					if(strValue.length() > (i + 1)) {
-						int entP = getArrabic(strValue.substring(i+1, i + 2));
-						if((entP == 50) || (entP == 100)) {
-							ent = entP - ent;
-							i +=2;
-						} else	i++;
-					} else	 end = true;
-					val += ent;
-				} else {
-					if(ent == 100) {
-						
-						if(strValue.length() > (i + 1)) {
-							int entP = getArrabic(strValue.substring(i+1, i + 2));
-							if((entP == 500) || (entP == 1000)) {
-								ent = entP - ent;
-								i +=2;
-							} else	i++;
-						} else	 end = true;
-						val += ent;
-						
-					} else {
-						if((ent > 10) && (ent != 100)) {
-							val += ent;
-							i++;
-						} else {
-							if(ent < 10) {
-								val += getArrabic(strValue.substring(i, strValue.length()));
-								end = true;
-							}
-						}
-					}
-				}
-			}while((i < strValue.length()) && (end == false));
-		} else   val = getArrabic(strValue);
-		return val;
+	
+	public boolean romanIsCalculable(String str_value) {
+		if(getArrabic(str_value.substring(0, 1)) > 10)   return false;
+		else {
+			if(str_value.length() > 1) {
+				if(getArrabic(str_value.substring(0, 1)) == 10)   return false;
+				else   return true;
+			} else   return true;
+		}
 	}
 	
 	/**
